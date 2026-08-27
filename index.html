@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The AI Harness, Explained | Improv Theatre with a Stage Manager | AltNexus AI Core</title>
+<meta name="description" content="Most executives cannot say what an AI harness does. This page fixes that in four minutes: an analogy that holds, a live simulation, a reference card and a video.">
+<meta property="og:title" content="The AI Harness, Explained: Improv Theatre with a Stage Manager">
+<meta property="og:description" content="Same AI agents, same scene, run twice: once without a harness, once with one. A live simulation, in your browser, six minutes.">
+<meta property="og:image" content="https://harness.altnexus.com/og-image.png">
+<meta property="og:url" content="https://harness.altnexus.com">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#081C35">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#081C35;--orange:#CC5500;--slate:#3C5364;--steel:#4682B4;--panel:#F5F5F5;--line:#D8DEE6;
+--green:#007A5E;--red:#9C2B26}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',Arial,sans-serif;color:var(--navy);background:#fff;line-height:1.55;-webkit-font-smoothing:antialiased}
+.serif{font-family:'DM Serif Display',Georgia,serif}
+.mono{font-family:'JetBrains Mono',monospace}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+header{background:var(--navy);color:#fff;padding:13px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+header .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9FB3C8}
+header .tag{font-size:12px;color:#9FB3C8}
+a.btn{display:inline-block;background:var(--navy);color:#fff;text-decoration:none;padding:13px 24px;font-weight:500;font-size:15px;border:1px solid var(--navy);transition:background .15s}
+a.btn:hover{background:#0D2A4E}
+a.btn.ghost{background:#fff;color:var(--navy)}
+a.btn.ghost:hover{background:var(--panel)}
+
+/* HERO: the two-outcomes split */
+.hero{padding:60px 0 46px;border-bottom:1px solid var(--line)}
+.hero .kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--slate)}
+.hero h1{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(32px,5.2vw,54px);line-height:1.1;margin:14px 0 14px;max-width:22ch}
+.hero h1 em{font-style:normal;color:var(--orange)}
+.hero p.lede{font-size:18px;color:var(--slate);max-width:64ch;margin-bottom:26px}
+.split{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);margin:8px 0 26px}
+@media(max-width:760px){.split{grid-template-columns:1fr}}
+.split .col{padding:24px}
+.split .col.off{border-right:1px solid var(--line);background:#FBF6F5}
+@media(max-width:760px){.split .col.off{border-right:none;border-bottom:1px solid var(--line)}}
+.split .col.on{background:#F4FAF8}
+.split .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
+.split .off .label{color:var(--red)}
+.split .on .label{color:var(--green)}
+.split ul{list-style:none}
+.split li{font-size:14.5px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.split li:last-child{border:none}
+.split li b{display:block;font-family:'JetBrains Mono',monospace;font-size:12px;margin-bottom:1px}
+.split .off li b{color:var(--red)}
+.split .on li b{color:var(--green)}
+.hero .cta-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.hero .note{font-size:12.5px;color:var(--slate)}
+
+/* Analogy strip */
+.analogy{padding:52px 0;border-bottom:1px solid var(--line)}
+h2.sec{font-family:'DM Serif Display',Georgia,serif;font-size:30px;margin-bottom:8px}
+p.sub{color:var(--slate);max-width:66ch;margin-bottom:26px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.card{border:1px solid var(--line);padding:20px}
+.card .role{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);margin-bottom:6px}
+.card h3{font-family:'DM Serif Display',Georgia,serif;font-size:20px;margin-bottom:8px}
+.card p{font-size:14px;color:var(--slate)}
+.card.kill{border-left:3px solid var(--orange)}
+
+/* Three ways to learn */
+.paths{padding:52px 0;border-bottom:1px solid var(--line);background:var(--panel)}
+.pathgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.path{background:#fff;border:1px solid var(--line);padding:24px;display:flex;flex-direction:column}
+.path .ptime{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
+.path h3{font-family:'DM Serif Display',Georgia,serif;font-size:22px;margin-bottom:8px}
+.path p{font-size:14.5px;color:var(--slate);margin-bottom:18px;flex:1}
+.videobox{border:1px solid var(--line);background:var(--navy);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:#9FB3C8;font-family:'JetBrains Mono',monospace;font-size:12px;margin-bottom:14px;text-align:center;padding:12px}
+
+.videobox .vb-inner{display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;text-align:center;padding:8px}
+.videobox .vb-title{font-family:'DM Serif Display',Georgia,serif;font-size:22px;color:#fff;letter-spacing:0}
+.videobox .vb-sub{font-family:'DM Sans',Arial,sans-serif;font-size:13px;color:#9FB3C8;letter-spacing:0;text-transform:none;max-width:30ch;line-height:1.4}
+.videobox .vb-meta{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-top:4px}
+.videobox .vb-rule{width:34px;height:2px;background:var(--orange);margin:2px 0}
+
+/* CTA */
+.cta{padding:56px 0}
+.cta .inner{background:var(--panel);border-left:3px solid var(--orange);padding:30px}
+.cta h2{font-family:'DM Serif Display',Georgia,serif;font-size:28px;margin-bottom:10px}
+.cta p{max-width:66ch;margin-bottom:14px}
+.cta .path-line{font-size:14px;color:var(--slate)}
+.cta a.mail{color:var(--orange);font-weight:700;text-decoration:none}
+.cta a.mail:hover{text-decoration:underline}
+
+footer{background:var(--navy);color:#9FB3C8;padding:28px 24px;font-size:12.5px;line-height:1.8}
+footer .brand{color:#fff;font-family:'DM Serif Display',Georgia,serif;font-size:16px}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="eyebrow">AltNexus AI Core</div>
+    <div class="serif" style="font-size:19px">The AI Harness, Explained</div>
+  </div>
+  <div class="tag">Fractional CDAO / CAIO &nbsp;|&nbsp; AI Strategy. Architected.</div>
+</header>
+
+<div class="wrap">
+
+<section class="hero">
+  <div class="kicker">Agentic workforce governance</div>
+  <h1>Your AI agents improvise every take. Who is running the <em>stage</em>?</h1>
+  <p class="lede">An AI harness is not the model and not the chatbot. It is the operating layer between an agent's intent and the real world: the stage manager who controls which props the performers may touch, which lines require the director's sign-off, and when to call "Cut" mid-scene. Same agents, same task, two very different endings.</p>
+
+  <div class="split" aria-label="Same scene, two outcomes">
+    <div class="col off">
+      <div class="label">Harness off</div>
+      <ul>
+        <li><b>SCENE 1</b>An agent grabs the payments tool and issues a $12,400 refund. No approval trail exists.</li>
+        <li><b>SCENE 2</b>An agent invents a 40% discount and a delivery guarantee, and sends it to a live prospect.</li>
+        <li><b>SCENE 3</b>A retry loop deletes 3,000+ records over 40 minutes. Nobody was watching.</li>
+      </ul>
+    </div>
+    <div class="col on">
+      <div class="label">Harness on</div>
+      <ul>
+        <li><b>SCENE 1</b>Refund blocked at the tool allowlist. Remedy routed to the director's approval queue.</li>
+        <li><b>SCENE 2</b>External-commitment gate catches the promise. It arrives as a draft, not a contract.</li>
+        <li><b>SCENE 3</b>Loop detected at action 4. Kill switch halts the scene mid-take, state preserved, incident logged.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cta-row">
+    <a class="btn" href="AIHARNESS-IMPROV-STAGE-DEMO_v1_20260816.html">Run the live simulation</a>
+    <a class="btn ghost" href="#paths">Or pick your depth</a>
+    <span class="note">Interactive, in your browser, nothing to install. Simulation figures are modelled and illustrative.</span>
+  </div>
+</section>
+
+<section class="analogy">
+  <h2 class="sec">Improv theatre with a stage manager</h2>
+  <p class="sub">Film actors follow a fixed script; AI agents do not. They improvise every scene, which is exactly why the governance layer matters more than the model. Ten roles in the theatre map one-to-one onto the ten controls of a harness. Four of them decide whether your deployment is governed or merely hopeful.</p>
+  <div class="cards">
+    <div class="card">
+      <div class="role">The human</div>
+      <h3>The Director</h3>
+      <p>Decides what gets made and approves anything that leaves the building. Delegation and description live here, not inside the model.</p>
+    </div>
+    <div class="card">
+      <div class="role">Tools and APIs</div>
+      <h3>The Props</h3>
+      <p>What the performers may touch. The allowlist is the prop table: if it is not on the table, it is not in the scene.</p>
+    </div>
+    <div class="card">
+      <div class="role">Observability</div>
+      <h3>The Cameras</h3>
+      <p>Every take is recorded to the dailies. Most explanations call this a tool; it is the single most important governance feature you have.</p>
+    </div>
+    <div class="card kill">
+      <div class="role">The kill switch</div>
+      <h3>"Cut!"</h3>
+      <p>A film studio cannot stop a bad performance in real time. A well-built harness can, mid-take, with state preserved. This is the control your board will ask about.</p>
+    </div>
+  </div>
+</section>
+
+<section class="paths" id="paths">
+  <div class="wrap" style="padding:0">
+    <h2 class="sec">Three ways in, by the time you have</h2>
+    <p class="sub">Pick your depth. All three cover the same ten controls.</p>
+    <div class="pathgrid">
+      <div class="path">
+        <div class="ptime">4 minutes | Watch</div>
+        <h3>The video overview</h3>
+        <div class="videobox"><span class="vb-inner"><span class="vb-title">The Improv Stage</span><span class="vb-rule"></span><span class="vb-sub">What an AI harness actually does: the analogy, the three failure scenes, the ten controls.</span><span class="vb-meta">Executive overview | 4 minutes</span></span></div>
+        <p>The analogy, the three failure scenes and the ten controls, narrated at executive tempo.</p>
+        <span class="mono" style="font-size:12px;color:var(--slate);letter-spacing:.08em">ARRIVING 5 SEPTEMBER | SIMULATION IS LIVE NOW</span>
+      </div>
+      <div class="path">
+        <div class="ptime">6 minutes | Interact</div>
+        <h3>The live simulation</h3>
+        <p>Run three scenes with the harness off, then on. The policy JSON driving every allow, block, escalate and halt decision is visible and downloadable. This is live logic, not a video.</p>
+        <a class="btn" href="AIHARNESS-IMPROV-STAGE-DEMO_v1_20260816.html">Open the Improv Stage</a>
+      </div>
+      <div class="path">
+        <div class="ptime">2 minutes | Keep</div>
+        <h3>The reference card</h3>
+        <p>The 10 Controls of an AI Harness on one card: the theatre mapping, the governance question each control answers, and the gap questions to ask your team this week.</p>
+        <span class="mono" style="font-size:12px;color:var(--slate);letter-spacing:.08em">AVAILABLE 5 SEPTEMBER | GUMROAD RELEASE</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="inner">
+    <h2>Where does your deployment sit against the ten controls?</h2>
+    <p>Most organizations running AI agents today are performing Scene 1 with the harness off, and the decision was made by default, not design. Before your agents touch a payments API, a client inbox or a production database, the harness architecture question deserves a deliberate answer.</p>
+    <p class="path-line"><b>What happens next:</b> a 45-minute Agentic Workforce Governance Readiness conversation. You leave with a one-page gap assessment against the ten controls. Booking to first output: five business days.<br><br>
+    <a class="mail" href="mailto:pvanabbema@altnexus.com?subject=Harness%20Readiness%20-%20Landing%20Page">pvanabbema@altnexus.com</a> &nbsp;|&nbsp; altnexus.com &nbsp;|&nbsp; linkedin.com/in/pvanabbema</p>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="brand">AltNexus AI Core</div>
+    Patrick van Abbema, MBA, CMC, PMP, CBAP<br>
+    AI Strategy. Architected. (TM) | Considered Intelligence (TM) | Fractional CDAO / CAIO. Available for engagements: Government of Canada and private sector.<br>
+    (C) 2026 AltNexus Corp. All rights reserved.
+  </div>
+</footer>
+
+<script>
+if("serviceWorker" in navigator){
+  window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});
+}
+</script>
+
+</body>
+</html>

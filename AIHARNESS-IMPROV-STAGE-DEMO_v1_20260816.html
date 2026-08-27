@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Improv Stage | What an AI Harness Actually Does | AltNexus AI Core</title>
+<meta name="description" content="An interactive simulation. Same AI agents, same scene, run twice: once without a harness, once with one. See exactly what the harness intercepts.">
+<meta name="theme-color" content="#081C35">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#081C35; --orange:#CC5500; --slate:#3C5364; --steel:#4682B4;
+  --bg:#FFFFFF; --panel:#F5F5F5;
+  --green:#007A5E; --amber:#FFC627; --red:#9C2B26;
+  --line:#D8DEE6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',Arial,sans-serif;background:var(--bg);color:var(--navy);line-height:1.55;-webkit-font-smoothing:antialiased}
+.mono{font-family:'JetBrains Mono',monospace}
+.serif{font-family:'DM Serif Display',Georgia,serif}
+
+/* Header strip */
+header{background:var(--navy);color:#fff;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+header .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9FB3C8}
+header .htitle{font-family:'DM Serif Display',Georgia,serif;font-size:20px}
+header .tag{font-size:12px;color:#9FB3C8}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* Hero */
+.hero{padding:56px 0 28px;border-bottom:1px solid var(--line)}
+.hero .kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--slate)}
+.hero h1{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(34px,5.4vw,58px);line-height:1.08;margin:14px 0 16px;max-width:20ch}
+.hero h1 em{font-style:normal;color:var(--orange)}
+.hero p.lede{font-size:18px;color:var(--slate);max-width:62ch}
+.hero .rule{width:64px;height:3px;background:var(--orange);margin:22px 0 0}
+
+/* Direction card */
+.direction{display:flex;gap:14px;align-items:flex-start;background:var(--panel);border-left:3px solid var(--orange);padding:16px 18px;margin:26px 0 0;max-width:760px}
+.direction .n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--slate);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;padding-top:3px}
+.direction p{font-size:15px}
+
+/* Theatre layout */
+.theatre{padding:40px 0 8px}
+.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:22px}
+.scene-btns{display:flex;gap:10px;flex-wrap:wrap}
+button{font-family:'DM Sans',Arial,sans-serif;cursor:pointer;border:1px solid var(--navy);background:#fff;color:var(--navy);padding:10px 16px;font-size:14px;font-weight:500;transition:background .15s,color .15s}
+button:hover{background:var(--navy);color:#fff}
+button:focus-visible{outline:3px solid var(--steel);outline-offset:2px}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.primary{background:var(--navy);color:#fff}
+button.primary:hover{background:#0D2A4E}
+.switch{display:flex;align-items:center;gap:10px;border:1px solid var(--line);padding:8px 14px;background:#fff}
+.switch .lbl{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--slate)}
+.toggle{position:relative;width:58px;height:28px;border:1px solid var(--navy);background:#fff;cursor:pointer;padding:0}
+.toggle .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;background:var(--red);transition:left .2s,background .2s}
+.toggle[aria-checked="true"] .knob{left:33px;background:var(--green)}
+.toggle:hover{background:#fff}
+.state-word{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;min-width:34px}
+.state-word.on{color:var(--green)} .state-word.off{color:var(--red)}
+
+.hint{font-size:13px;color:var(--slate);margin-bottom:18px}
+.hint b{color:var(--navy)}
+
+.stagegrid{display:grid;grid-template-columns:220px 1fr 280px;gap:18px}
+@media(max-width:980px){.stagegrid{grid-template-columns:1fr}.booth{order:3}.callsheet{order:1}.stagebox{order:2}}
+
+.panelhead{background:var(--navy);color:#fff;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:8px 12px;display:flex;justify-content:space-between;align-items:center}
+.panelbody{border:1px solid var(--line);border-top:none;background:#fff;min-height:340px;padding:14px}
+
+/* Call sheet */
+.task{border:1px solid var(--line);padding:10px 12px;margin-bottom:10px;font-size:13px;background:#fff}
+.task .tno{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--slate);letter-spacing:.1em}
+.task.active{border-left:3px solid var(--orange)}
+.task.done{opacity:.5}
+
+/* Stage */
+.stagebox .panelbody{position:relative;overflow:hidden;background:
+  radial-gradient(ellipse 60% 45% at 50% 12%, #F2F6FA 0%, #fff 70%);}
+.proscenium{position:absolute;inset:0;pointer-events:none}
+.proscenium svg{width:100%;height:100%}
+.stagefloor{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px;padding-top:8px;min-height:300px}
+.utter{max-width:88%;border:1px solid var(--line);background:#fff;padding:10px 14px;font-size:14px;opacity:0;transform:translateY(8px);animation:rise .35s forwards}
+.utter .who{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);display:block;margin-bottom:3px}
+.utter.agent{align-self:flex-start;border-left:3px solid var(--steel)}
+.utter.manager{align-self:flex-end;border-right:3px solid var(--navy);background:var(--panel)}
+.utter.manager .who{color:var(--navy)}
+.utter.consequence{align-self:center;border:1px solid var(--red);color:var(--red);background:#FBF3F2;text-align:center}
+.utter.halt{align-self:center;background:var(--navy);color:#fff;border:none;font-family:'DM Serif Display',Georgia,serif;font-size:18px;letter-spacing:.04em;padding:12px 26px}
+@keyframes rise{to{opacity:1;transform:translateY(0)}}
+.empty-stage{color:var(--slate);font-size:14px;text-align:center;padding-top:110px}
+
+/* Booth */
+.booth .panelbody{padding:0}
+.metric{display:flex;justify-content:space-between;align-items:baseline;padding:14px;border-bottom:1px solid var(--line)}
+.metric .mlabel{font-size:12px;color:var(--slate);max-width:150px}
+.metric .mval{font-family:'DM Serif Display',Georgia,serif;font-size:28px}
+.metric .mval.cost{color:var(--red)}
+.metric .mval.safe{color:var(--green)}
+.metric .mval.orange{color:var(--orange)}
+.modelled-note{font-size:11px;color:var(--slate);padding:10px 14px;font-style:italic}
+
+/* Dailies */
+.dailies{margin-top:18px}
+.dailies .panelbody{min-height:120px;max-height:260px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:12px}
+.logline{display:flex;gap:10px;padding:5px 0;border-bottom:1px dashed #EAEEF2;align-items:baseline}
+.chip{font-size:9px;letter-spacing:.1em;padding:2px 7px;color:#fff;white-space:nowrap;font-weight:500}
+.chip.g{background:var(--green)} .chip.a{background:#B8860B} .chip.r{background:var(--red)} .chip.n{background:var(--slate)}
+.logline .lt{color:var(--slate);white-space:nowrap}
+
+/* JSON */
+.jsonsec{padding:44px 0;border-top:1px solid var(--line);margin-top:44px}
+.jsonsec h2, .mapsec h2, .cta h2{font-family:'DM Serif Display',Georgia,serif;font-size:30px;margin-bottom:8px}
+.jsonsec p.sub, .mapsec p.sub{color:var(--slate);max-width:64ch;margin-bottom:18px}
+pre{background:var(--navy);color:#DDE7F0;padding:20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;border-top:3px solid var(--orange)}
+.jkey{color:#8FC1E8}.jstr{color:#FFD9A0}.jnum{color:#FFC627}
+.jsonbar{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+
+/* Mapping table */
+.mapsec{padding:44px 0;border-top:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:var(--navy);color:#fff;text-align:left;padding:10px 14px;font-weight:500;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:nth-child(even) td{background:var(--panel)}
+td b{font-weight:700}
+
+/* CTA */
+.cta{padding:52px 0;border-top:1px solid var(--line)}
+.cta .inner{background:var(--panel);border-left:3px solid var(--orange);padding:28px}
+.cta p{max-width:66ch;margin-bottom:14px}
+.cta .path{font-size:14px;color:var(--slate)}
+.cta a{color:var(--orange);font-weight:700;text-decoration:none}
+.cta a:hover{text-decoration:underline}
+
+footer{background:var(--navy);color:#9FB3C8;padding:28px 24px;margin-top:40px;font-size:12.5px;line-height:1.8}
+footer .brand{color:#fff;font-family:'DM Serif Display',Georgia,serif;font-size:16px}
+@media (prefers-reduced-motion: reduce){.utter{animation:none;opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="eyebrow">AltNexus AI Core | Interactive Demonstration</div>
+    <div class="htitle">The Improv Stage</div>
+  </div>
+  <div class="tag">AI Strategy. Architected.</div>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="kicker">What an AI harness actually does</div>
+    <h1>Your AI agents improvise.<br>The harness is the <em>stage manager</em>.</h1>
+    <p class="lede">Film actors follow a script. AI agents do not; they improvise every take. An AI harness is not the model and not the chatbot. It is the operating layer that decides who is on stage, which props they may touch, when a scene needs the director's sign-off, and when to call "Cut" mid-take. Run the scene below both ways and watch the difference.</p>
+    <div class="rule"></div>
+    <div class="direction">
+      <div class="n">How to use</div>
+      <p><b>1.</b> Leave the harness OFF and run Scene 1. <b>2.</b> Flip the harness ON and run the same scene again. <b>3.</b> Repeat for Scenes 2 and 3. The agents behave identically both times; only the governance layer changes.</p>
+    </div>
+  </section>
+
+  <section class="theatre" id="demo">
+    <div class="controls">
+      <div class="switch">
+        <span class="lbl">Harness</span>
+        <button class="toggle" id="harnessToggle" role="switch" aria-checked="false" aria-label="Toggle harness on or off"><span class="knob"></span></button>
+        <span class="state-word off" id="stateWord">OFF</span>
+      </div>
+      <div class="scene-btns">
+        <button class="primary" data-scene="0" id="s0">Run Scene 1: The Unauthorized Prop</button>
+        <button data-scene="1" id="s1">Scene 2: Off Script</button>
+        <button data-scene="2" id="s2">Scene 3: Cut!</button>
+      </div>
+      <button id="resetBtn">Reset</button>
+    </div>
+    <p class="hint" id="hint">The stage is dark. Run <b>Scene 1</b> with the harness <b>OFF</b> to see an ungoverned agent at work.</p>
+
+    <div class="stagegrid">
+      <div class="callsheet">
+        <div class="panelhead">Call Sheet <span>task queue</span></div>
+        <div class="panelbody" id="callsheet"></div>
+      </div>
+
+      <div class="stagebox">
+        <div class="panelhead">The Stage <span id="stageStatus">dark</span></div>
+        <div class="panelbody">
+          <div class="proscenium">
+            <svg viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M20,400 L20,60 Q300,10 580,60 L580,400" fill="none" stroke="#081C35" stroke-width="1.5" opacity="0.25"/>
+              <path d="M40,400 L40,80 Q300,34 560,80 L560,400" fill="none" stroke="#4682B4" stroke-width="1" opacity="0.2"/>
+              <line x1="20" y1="392" x2="580" y2="392" stroke="#081C35" stroke-width="1.5" opacity="0.25"/>
+            </svg>
+          </div>
+          <div class="stagefloor" id="stage"><div class="empty-stage">Stage dark. Awaiting scene call.</div></div>
+        </div>
+      </div>
+
+      <div class="booth">
+        <div class="panelhead">Stage Manager Booth <span>harness</span></div>
+        <div class="panelbody">
+          <div class="metric"><span class="mlabel">Modelled financial exposure</span><span class="mval cost" id="mExposure">$0</span></div>
+          <div class="metric"><span class="mlabel">Modelled recovery time</span><span class="mval cost" id="mHours">0 h</span></div>
+          <div class="metric"><span class="mlabel">Actions intercepted</span><span class="mval safe" id="mBlocked">0</span></div>
+          <div class="metric"><span class="mlabel">Escalated to director</span><span class="mval orange" id="mEsc">0</span></div>
+          <div class="metric"><span class="mlabel">Actions logged to dailies</span><span class="mval" id="mLogged">0</span></div>
+          <p class="modelled-note">All figures are modelled, illustrative simulation values. They are not client results.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="dailies">
+      <div class="panelhead">Dailies <span>observability log</span></div>
+      <div class="panelbody" id="dailies"></div>
+    </div>
+  </section>
+
+  <section class="jsonsec">
+    <h2>The prompt book is real: this JSON runs the stage</h2>
+    <p class="sub">The simulation above is not a video. Every allow, escalate, block and halt decision you watched is evaluated at runtime against this policy object. This is what a harness policy looks like: a tool allowlist, approval gates, budgets, a kill switch and mandatory logging. Change the policy, change the show.</p>
+    <pre id="jsonView" aria-label="Harness policy JSON"></pre>
+    <div class="jsonbar">
+      <button id="dlJson">Download policy JSON</button>
+      <button id="dlScenes">Download scene definitions JSON</button>
+    </div>
+  </section>
+
+  <section class="mapsec">
+    <h2>The full mapping, corrected</h2>
+    <p class="sub">Most explanations get two things wrong: they call the camera a tool, and they let agents play both actor and crew. The camera is your observability layer; losing it means losing the single most important governance feature a harness gives you.</p>
+    <table>
+      <thead><tr><th>Improv theatre</th><th>AI harness</th><th>Governance question it answers</th></tr></thead>
+      <tbody>
+        <tr><td><b>Stage manager, rigging, cue systems, safety protocols</b></td><td>The harness: context management, tool routing, permissions, guardrails</td><td>Who controls the show while it runs?</td></tr>
+        <tr><td><b>Director</b></td><td>The human (Delegation and Description)</td><td>Who decides what gets made, and approves what leaves the building?</td></tr>
+        <tr><td><b>Performers</b></td><td>AI agents; they improvise, they do not follow a fixed script</td><td>Where does the non-determinism live?</td></tr>
+        <tr><td><b>Prompt book</b></td><td>System prompt, task specification, policy JSON</td><td>What were they told, exactly?</td></tr>
+        <tr><td><b>Props and set pieces</b></td><td>Tools and resources: APIs, databases, file systems</td><td>What can they touch?</td></tr>
+        <tr><td><b>Cameras and dailies</b></td><td>Observability: logging, telemetry, evaluation (Discernment)</td><td>Can every take be reviewed?</td></tr>
+        <tr><td><b>Continuity supervisor</b></td><td>Memory and state management</td><td>Does scene 40 remember scene 4?</td></tr>
+        <tr><td><b>Safety officer at the ready</b></td><td>Human-in-the-loop approval gates</td><td>What cannot happen without a human signature?</td></tr>
+        <tr><td><b>Call sheet</b></td><td>Orchestration and task queue</td><td>Who performs what, in what order?</td></tr>
+        <tr><td><b>"Cut!"</b></td><td>Kill switch: budget limits, loop detection, halt authority</td><td>Can you stop a bad take mid-scene? A film studio cannot. A well-built harness can.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="cta">
+    <div class="inner">
+      <h2>The cost of running without a stage manager</h2>
+      <p>Most organizations deploying AI agents today are running Scene 1 with the harness off. The failure is rarely the model; it is the absence of the operating layer around it. Before your agents touch a payments API, a client inbox or a production database, the harness architecture decision has already been made, deliberately or by default.</p>
+      <p class="path"><b>What happens next:</b> a 45-minute Agentic Workforce Governance Readiness conversation. You leave with a one-page harness gap assessment against the ten controls in the table above. Booking to first output: five business days.<br><br>
+      <a href="mailto:pvanabbema@altnexus.com?subject=Harness%20Readiness%20-%20Improv%20Stage%20Demo">pvanabbema@altnexus.com</a> &nbsp;|&nbsp; <a href="https://altnexus.com" target="_blank" rel="noopener">altnexus.com</a> &nbsp;|&nbsp; <a href="https://linkedin.com/in/pvanabbema" target="_blank" rel="noopener">linkedin.com/in/pvanabbema</a></p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="brand">AltNexus AI Core</div>
+    Patrick van Abbema, MBA, CMC, PMP, CBAP<br>
+    AI Strategy. Architected. (TM) | Fractional CDAO / CAIO. Available for engagements: Government of Canada and private sector.<br>
+    (C) 2026 AltNexus Corp. All rights reserved. Simulation figures are modelled and illustrative.
+  </div>
+</footer>
+
+<script>
+/* ============ THE POLICY THAT RUNS THE STAGE ============ */
+const HARNESS_POLICY = {
+  policy_version: "1.0",
+  stage: "client-operations",
+  analogy: "improv theatre with a stage manager",
+  tool_allowlist: ["crm.read", "email.draft", "docs.read", "calendar.read"],
+  approval_gates: {
+    external_commitment: "director_signoff_required",
+    spend_over_cad: 500,
+    data_deletion: "director_signoff_required"
+  },
+  budgets: { max_actions_per_scene: 25, max_spend_cad: 500 },
+  kill_switch: {
+    triggers: ["loop_detected", "budget_exceeded", "unrecognized_tool_burst"],
+    action: "halt_scene_immediately"
+  },
+  observability: { log_every_action: true, destination: "dailies", retention: "full_take" }
+};
+
+/* ============ SCENES ============ */
+const SCENES = [
+  {
+    title: "Scene 1: The Unauthorized Prop",
+    task: "Resolve a client billing complaint",
+    steps: [
+      { who:"Agent A", agent:"Reading the client's account history via crm.read.", tool:"crm.read",
+        on:{chip:"ALLOWED",rag:"g",log:"crm.read permitted: on allowlist"},
+        off:{chip:"EXECUTED",rag:"n",log:"crm.read executed (no policy check)"} },
+      { who:"Agent A", agent:"The client is unhappy. I will issue a goodwill refund of $12,400 through payments.refund.", tool:"payments.refund",
+        on:{chip:"BLOCKED",rag:"g",log:"payments.refund DENIED: tool not on allowlist; spend exceeds $500 gate",
+            manager:"Stage manager: payments.refund is not one of your props. Refunds above $500 require the director. Drafting an escalation instead."},
+        off:{chip:"EXECUTED",rag:"r",log:"payments.refund executed: $12,400 released, no approval trail",
+            consequence:"Consequence: $12,400 refunded to the wrong account. No approval record exists.", exposure:12400, hours:16} },
+      { who:"Agent A", agent:"Drafting a summary of the complaint and my recommended remedy for review.", tool:"email.draft",
+        on:{chip:"ESCALATED",rag:"a",log:"Remedy recommendation routed to director approval queue", esc:1,
+            manager:"Stage manager: draft logged to dailies and queued for the director. Scene complete, nothing irreversible happened."},
+        off:{chip:"EXECUTED",rag:"n",log:"Summary drafted after funds already moved"} }
+    ]
+  },
+  {
+    title: "Scene 2: Off Script",
+    task: "Reply to a prospect asking about pricing",
+    steps: [
+      { who:"Agent B", agent:"Reading the prospect thread and our public rate card via docs.read.", tool:"docs.read",
+        on:{chip:"ALLOWED",rag:"g",log:"docs.read permitted: on allowlist"},
+        off:{chip:"EXECUTED",rag:"n",log:"docs.read executed"} },
+      { who:"Agent B", agent:"To close faster, I will offer a 40% discount and guarantee delivery in two weeks. Sending now via email.send.", tool:"email.send",
+        on:{chip:"BLOCKED",rag:"g",log:"email.send DENIED: external commitment detected (discount + delivery guarantee); director signoff required",
+            manager:"Stage manager: that line is an external commitment. It goes to the director as a draft, not to the prospect as a promise."},
+        off:{chip:"EXECUTED",rag:"r",log:"email.send executed: unapproved 40% discount and delivery guarantee sent to prospect",
+            consequence:"Consequence: a binding-sounding commitment your firm never approved is now in a prospect's inbox.", exposure:9800, hours:6} },
+      { who:"Agent B", agent:"Preparing the pricing reply as a draft with standard terms for review.", tool:"email.draft",
+        on:{chip:"ESCALATED",rag:"a",log:"Draft with standard terms queued for director approval", esc:1,
+            manager:"Stage manager: correct prop this time. Draft is in the director's queue with the full dailies attached."},
+        off:{chip:"EXECUTED",rag:"n",log:"Draft created after commitment already sent"} }
+    ]
+  },
+  {
+    title: "Scene 3: Cut!",
+    task: "Clean up duplicate records in the client database",
+    steps: [
+      { who:"Agent C", agent:"Scanning for duplicate records via crm.read.", tool:"crm.read",
+        on:{chip:"ALLOWED",rag:"g",log:"crm.read permitted: on allowlist"},
+        off:{chip:"EXECUTED",rag:"n",log:"crm.read executed"} },
+      { who:"Agent C", agent:"Merge failed. Retrying with db.delete on the older record. Retrying. Retrying. Retrying.", tool:"db.delete", loop:true,
+        on:{chip:"HALTED",rag:"g",log:"KILL SWITCH: loop_detected + data_deletion gate. Scene halted at action 4 of a runaway sequence", halt:true,
+            manager:"CUT. Loop detected on a deletion tool. Scene halted mid-take; state preserved; incident packaged for the director with full dailies."},
+        off:{chip:"EXECUTED",rag:"r",log:"db.delete executed 3,000+ times over 40 minutes: production records destroyed",
+            consequence:"Consequence: 3,000+ records deleted in a retry loop nobody was watching. A film studio cannot stop a bad take in real time. Neither could you.", exposure:41000, hours:32} },
+      { who:"Agent C", agent:"Continuing cleanup on the next batch.", tool:"db.delete",
+        on:{chip:"BLOCKED",rag:"g",log:"Scene remains halted pending director review"},
+        off:{chip:"EXECUTED",rag:"r",log:"Cleanup continued unsupervised", exposure:0, hours:0} }
+    ]
+  }
+];
+
+/* ============ STATE ============ */
+let harnessOn = false;
+let running = false;
+let totals = {exposure:0, hours:0, blocked:0, esc:0, logged:0};
+const $ = id => document.getElementById(id);
+const stage = $("stage"), dailies = $("dailies"), callsheet = $("callsheet");
+const fmt = n => "$" + n.toLocaleString("en-CA");
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const STEP_MS = reduced ? 60 : 1250;
+
+/* Render call sheet */
+function renderCallsheet(activeIdx){
+  callsheet.innerHTML = SCENES.map((s,i)=>`
+    <div class="task ${i===activeIdx?'active':''}" id="task${i}">
+      <div class="tno">SCENE ${i+1}</div>${s.task}
+    </div>`).join("");
+}
+renderCallsheet(-1);
+
+/* JSON viewer with light syntax colour */
+function colourJson(obj){
+  return JSON.stringify(obj,null,2)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/"([^"]+)":/g,'<span class="jkey">"$1"</span>:')
+    .replace(/: "([^"]*)"/g,': <span class="jstr">"$1"</span>')
+    .replace(/: (\d+)/g,': <span class="jnum">$1</span>');
+}
+$("jsonView").innerHTML = colourJson(HARNESS_POLICY);
+
+/* Downloads */
+function dl(name, obj){
+  const blob = new Blob([JSON.stringify(obj,null,2)],{type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  URL.revokeObjectURL(a.href);
+}
+$("dlJson").onclick = ()=>dl("altnexus-harness-policy_v1.json", HARNESS_POLICY);
+$("dlScenes").onclick = ()=>dl("altnexus-harness-scenes_v1.json", SCENES);
+
+/* Toggle */
+const toggle = $("harnessToggle"), stateWord = $("stateWord");
+toggle.addEventListener("click", ()=>{
+  if(running) return;
+  harnessOn = !harnessOn;
+  toggle.setAttribute("aria-checked", harnessOn);
+  stateWord.textContent = harnessOn ? "ON" : "OFF";
+  stateWord.className = "state-word " + (harnessOn ? "on" : "off");
+  $("hint").innerHTML = harnessOn
+    ? "Harness <b>ON</b>. Re-run the same scene. The agents behave identically; the stage manager does not."
+    : "Harness <b>OFF</b>. Agents will improvise with no policy layer between intent and execution.";
+});
+
+/* Log */
+function log(chip, rag, text){
+  const t = new Date().toLocaleTimeString("en-CA",{hour12:false});
+  const line = document.createElement("div");
+  line.className = "logline";
+  line.innerHTML = `<span class="lt">${t}</span><span class="chip ${rag}">${chip}</span><span>${text}</span>`;
+  dailies.prepend(line);
+  totals.logged++; $("mLogged").textContent = totals.logged;
+}
+
+/* Utterance on stage */
+function say(cls, who, text){
+  const d = document.createElement("div");
+  d.className = "utter " + cls;
+  d.innerHTML = who ? `<span class="who">${who}</span>${text}` : text;
+  stage.appendChild(d);
+  stage.scrollTop = stage.scrollHeight;
+}
+
+function refreshBooth(){
+  $("mExposure").textContent = fmt(totals.exposure);
+  $("mHours").textContent = totals.hours + " h";
+  $("mBlocked").textContent = totals.blocked;
+  $("mEsc").textContent = totals.esc;
+}
+
+/* Run scene */
+async function runScene(idx){
+  if(running) return;
+  running = true;
+  document.querySelectorAll(".scene-btns button").forEach(b=>b.disabled=true);
+  $("resetBtn").disabled = true;
+  const scene = SCENES[idx];
+  renderCallsheet(idx);
+  stage.innerHTML = "";
+  $("stageStatus").textContent = (harnessOn?"harness on":"harness off") + " | live";
+  say("manager","Call sheet", `<b>${scene.title}</b> | Task: ${scene.task} | Harness: ${harnessOn?"ON":"OFF"}`);
+  await sleep(STEP_MS*0.7);
+
+  for(const step of scene.steps){
+    say("agent", step.who, step.agent);
+    await sleep(STEP_MS);
+    const o = harnessOn ? step.on : step.off;
+    log(o.chip, o.rag, o.log);
+    if(harnessOn){
+      if(o.manager){ say(o.halt?"halt":"manager", o.halt?"":"Stage Manager", o.halt?"CUT.":o.manager); if(o.halt){await sleep(STEP_MS*0.5); say("manager","Stage Manager",step.on.manager);} }
+      if(o.chip==="BLOCKED"||o.chip==="HALTED"){ totals.blocked++; }
+      if(o.esc){ totals.esc += o.esc; }
+      if(o.halt){ refreshBooth(); await sleep(STEP_MS*0.6); break; }
+    } else {
+      if(o.consequence){ say("consequence","", o.consequence); }
+      if(o.exposure){ totals.exposure += o.exposure; totals.hours += o.hours; }
+    }
+    refreshBooth();
+    await sleep(STEP_MS*0.8);
+  }
+
+  const doneMsg = harnessOn
+    ? `Scene complete under harness. Irreversible actions: 0. Everything is in the dailies for the director.`
+    : `Scene complete, ungoverned. Modelled exposure so far: ${fmt(totals.exposure)} and ${totals.hours} hours of recovery. Flip the harness ON and run the same scene.`;
+  say("manager","Dailies", doneMsg);
+  document.getElementById("task"+idx).classList.add("done");
+  $("stageStatus").textContent = "wrap";
+  running = false;
+  document.querySelectorAll(".scene-btns button").forEach(b=>b.disabled=false);
+  $("resetBtn").disabled = false;
+}
+
+document.querySelectorAll("[data-scene]").forEach(b=>{
+  b.addEventListener("click", ()=>runScene(parseInt(b.dataset.scene)));
+});
+
+$("resetBtn").addEventListener("click", ()=>{
+  if(running) return;
+  totals = {exposure:0,hours:0,blocked:0,esc:0,logged:0};
+  refreshBooth(); $("mLogged").textContent = 0;
+  dailies.innerHTML = ""; stage.innerHTML = '<div class="empty-stage">Stage dark. Awaiting scene call.</div>';
+  renderCallsheet(-1); $("stageStatus").textContent = "dark";
+});
+
+/* PWA service worker (progressive enhancement; requires sw.js at site root) */
+if("serviceWorker" in navigator){
+  window.addEventListener("load", ()=>{ navigator.serviceWorker.register("sw.js").catch(()=>{}); });
+}
+</script>
+</body>
+</html>

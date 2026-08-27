@@ -1,0 +1,13 @@
+{
+  "name": "The Improv Stage | AltNexus AI Harness Demo",
+  "short_name": "Improv Stage",
+  "description": "Interactive simulation of what an AI harness does: same agents, same scene, run with and without governance.",
+  "start_url": "./AIHARNESS-IMPROV-STAGE-DEMO_v1_20260816.html",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#081C35",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
