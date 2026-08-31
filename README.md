@@ -5,7 +5,7 @@ Static site for harness.altnexus.com, deployed via Cloudflare Pages from this re
 | File | Purpose |
 |---|---|
 | `index.html` | Landing page: two-outcomes hero, analogy cards, three paths, CTA |
-| `AIHARNESS-IMPROV-STAGE-DEMO_v1_20260816.html` | The Improv Stage, a JSON-driven interactive simulation of three failure scenes, harness off and on |
+| `AIHARNESS-IMPROV-STAGE-DEMO_v1_20260816.html` | The Improv Stage, a JSON-driven interactive simulation of four failure scenes, harness off and on |
 | `manifest.json` | PWA manifest. `start_url` is the simulation |
 | `sw.js` | Service worker. Precaches only non-redirecting paths and always goes to the network for navigations |
 | `icon-192.png`, `icon-512.png` | PWA icons |
