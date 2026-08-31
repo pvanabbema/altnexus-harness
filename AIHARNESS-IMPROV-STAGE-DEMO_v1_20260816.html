@@ -44,6 +44,12 @@ header .tag{font-size:12px;color:#9FB3C8}
 .direction{display:flex;gap:14px;align-items:flex-start;background:var(--panel);border-left:3px solid var(--orange);padding:16px 18px;margin:26px 0 0;max-width:760px}
 .direction .n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--slate);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;padding-top:3px}
 .direction p{font-size:15px}
+/* Build-time vs run-time distinction block, added 2026-08-31 */
+.distinction{background:var(--panel);border-left:3px solid var(--navy);padding:18px 20px;margin:26px 0 0;max-width:840px}
+.distinction .n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--slate);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+.distinction p{font-size:15px;margin-bottom:10px}
+.distinction p:last-child{margin-bottom:0}
+.distinction .both{border-top:1px solid var(--line);padding-top:10px;font-weight:500;color:var(--navy)}
 
 /* Theatre layout */
 .theatre{padding:40px 0 8px}
@@ -128,6 +134,13 @@ th{background:var(--navy);color:#fff;text-align:left;padding:10px 14px;font-weig
 td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
 tr:nth-child(even) td{background:var(--panel)}
 td b{font-weight:700}
+.tablescroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tablescroll table{min-width:760px}
+td.fw{font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.7;color:var(--slate);white-space:nowrap}
+td.fw i{font-style:normal;color:var(--navy)}
+.mapnote{font-size:13px;color:var(--slate);max-width:74ch;margin-top:16px;border-left:3px solid var(--line);padding-left:14px}
+.mapnote b{color:var(--navy)}
+.mapnote i{font-style:italic}
 
 /* CTA */
 .cta{padding:52px 0;border-top:1px solid var(--line)}
@@ -158,10 +171,16 @@ footer .brand{color:#fff;font-family:'DM Serif Display',Georgia,serif;font-size:
     <div class="kicker">What an AI harness actually does</div>
     <h1>Your AI agents improvise.<br>The harness is the <em>stage manager</em>.</h1>
     <p class="lede">Film actors follow a script. AI agents do not; they improvise every take. An AI harness is not the model and not the chatbot. It is the operating layer that decides who is on stage, which props they may touch, when a scene needs the director's sign-off, and when to call "Cut" mid-take. Run the scene below both ways and watch the difference.</p>
+    <div class="distinction">
+      <div class="n">Two different things are called a harness</div>
+      <p>A <b>build-time harness</b> governs how an application gets built: the standards, the templates, the review, the instructions given to a coding agent. It produces software that is consistent, secure and accessible on the day it ships. That work is real and it is necessary.</p>
+      <p>A <b>run-time harness</b>, the one on this page, governs what an agent does once it is deployed: what it may touch, which decisions need a human first, what gets logged, and what it is allowed to cost. It acts at two in the morning, eight months later, when nobody is watching.</p>
+      <p class="both">Both are required. Most organizations have neither, and the second one is the one nobody is buying yet.</p>
+    </div>
     <div class="rule"></div>
     <div class="direction">
       <div class="n">How to use</div>
-      <p><b>1.</b> Leave the harness OFF and run Scene 1. <b>2.</b> Flip the harness ON and run the same scene again. <b>3.</b> Repeat for Scenes 2 and 3. The agents behave identically both times; only the governance layer changes.</p>
+      <p><b>1.</b> Leave the harness OFF and run Scene 1. <b>2.</b> Flip the harness ON and run the same scene again. <b>3.</b> Repeat for Scenes 2, 3 and 4. The agents behave identically both times; only the governance layer changes.</p>
     </div>
   </section>
 
@@ -176,6 +195,7 @@ footer .brand{color:#fff;font-family:'DM Serif Display',Georgia,serif;font-size:
         <button class="primary" data-scene="0" id="s0">Run Scene 1: The Unauthorized Prop</button>
         <button data-scene="1" id="s1">Scene 2: Off Script</button>
         <button data-scene="2" id="s2">Scene 3: Cut!</button>
+        <button data-scene="3" id="s3">Scene 4: Eight Months Later</button>
       </div>
       <button id="resetBtn">Reset</button>
     </div>
@@ -233,21 +253,25 @@ footer .brand{color:#fff;font-family:'DM Serif Display',Georgia,serif;font-size:
   <section class="mapsec">
     <h2>The full mapping, corrected</h2>
     <p class="sub">Most explanations get two things wrong: they call the camera a tool, and they let agents play both actor and crew. The camera is your observability layer; losing it means losing the single most important governance feature a harness gives you.</p>
+    <div class="tablescroll">
     <table>
-      <thead><tr><th>Improv theatre</th><th>AI harness</th><th>Governance question it answers</th></tr></thead>
+      <thead><tr><th>Improv theatre</th><th>AI harness</th><th>Governance question it answers</th><th>Assessed against</th></tr></thead>
       <tbody>
-        <tr><td><b>Stage manager, rigging, cue systems, safety protocols</b></td><td>The harness: context management, tool routing, permissions, guardrails</td><td>Who controls the show while it runs?</td></tr>
-        <tr><td><b>Director</b></td><td>The human (Delegation and Description)</td><td>Who decides what gets made, and approves what leaves the building?</td></tr>
-        <tr><td><b>Performers</b></td><td>AI agents; they improvise, they do not follow a fixed script</td><td>Where does the non-determinism live?</td></tr>
-        <tr><td><b>Prompt book</b></td><td>System prompt, task specification, policy JSON</td><td>What were they told, exactly?</td></tr>
-        <tr><td><b>Props and set pieces</b></td><td>Tools and resources: APIs, databases, file systems</td><td>What can they touch?</td></tr>
-        <tr><td><b>Cameras and dailies</b></td><td>Observability: logging, telemetry, evaluation (Discernment)</td><td>Can every take be reviewed?</td></tr>
-        <tr><td><b>Continuity supervisor</b></td><td>Memory and state management</td><td>Does scene 40 remember scene 4?</td></tr>
-        <tr><td><b>Safety officer at the ready</b></td><td>Human-in-the-loop approval gates</td><td>What cannot happen without a human signature?</td></tr>
-        <tr><td><b>Call sheet</b></td><td>Orchestration and task queue</td><td>Who performs what, in what order?</td></tr>
-        <tr><td><b>"Cut!"</b></td><td>Kill switch: budget limits, loop detection, halt authority</td><td>Can you stop a bad take mid-scene? A film studio cannot. A well-built harness can.</td></tr>
+        <tr><td><b>Stage manager, rigging, cue systems, safety protocols</b></td><td>The harness: context management, tool routing, permissions, guardrails</td><td>Who controls the show while it runs?</td><td class="fw">ISO/IEC 42001 <i>A.9.2</i><br>ISO/IEC 42001 <i>A.6.2.6</i><br>NIST AI RMF <i>MANAGE 2.1</i></td></tr>
+        <tr><td><b>Director</b></td><td>The human (Delegation and Description)</td><td>Who decides what gets made, and approves what leaves the building?</td><td class="fw">ISO/IEC 42001 <i>A.3.2</i><br>NIST AI RMF <i>GOVERN 3.2</i></td></tr>
+        <tr><td><b>Performers</b></td><td>AI agents; they improvise, they do not follow a fixed script</td><td>Where does the non-determinism live?</td><td class="fw">ISO/IEC 42001 <i>A.6.2.4</i><br>NIST AI RMF <i>GOVERN 4.3</i></td></tr>
+        <tr><td><b>Prompt book</b></td><td>System prompt, task specification, policy JSON</td><td>What were they told, exactly?</td><td class="fw">ISO/IEC 42001 <i>A.6.2.2</i><br>ISO/IEC 42001 <i>A.6.2.7</i><br>NIST AI RMF <i>MEASURE 2.8</i></td></tr>
+        <tr><td><b>Props and set pieces</b></td><td>Tools and resources: APIs, databases, file systems</td><td>What can they touch?</td><td class="fw">ISO/IEC 42001 <i>A.4.4</i><br>ISO/IEC 42001 <i>A.4.5</i><br>NIST AI RMF <i>MAP 4.1</i></td></tr>
+        <tr><td><b>Cameras and dailies</b></td><td>Observability: logging, telemetry, evaluation (Discernment)</td><td>Can every take be reviewed?</td><td class="fw">ISO/IEC 42001 <i>A.6.2.8</i><br>NIST AI RMF <i>MANAGE 4.1</i></td></tr>
+        <tr><td><b>Continuity supervisor</b></td><td>Memory and state management</td><td>Does scene 40 remember scene 4?</td><td class="fw">ISO/IEC 42001 <i>A.7.5</i><br>NIST AI RMF <i>MANAGE 4.1</i></td></tr>
+        <tr><td><b>Safety officer at the ready</b></td><td>Human-in-the-loop approval gates</td><td>What cannot happen without a human signature?</td><td class="fw">ISO/IEC 42001 <i>A.9.4</i><br>NIST AI RMF <i>MAP 3.5</i></td></tr>
+        <tr><td><b>Call sheet</b></td><td>Orchestration and task queue</td><td>Who performs what, in what order?</td><td class="fw">ISO/IEC 42001 <i>A.6.2.5</i><br>NIST AI RMF <i>GOVERN 1.6</i></td></tr>
+        <tr><td><b>"Cut!"</b></td><td>Kill switch: budget limits, loop detection, halt authority</td><td>Can you stop a bad take mid-scene? A film studio cannot. A well-built harness can.</td><td class="fw">ISO/IEC 42001 <i>A.6.2.6</i><br>NIST AI RMF <i>MANAGE 2.4</i></td></tr>
       </tbody>
     </table>
+    </div>
+    <p class="mapnote"><b>About the fourth column.</b> Control identifiers are from ISO/IEC 42001:2023 Annex A and NIST AI 100-1, the AI Risk Management Framework 1.0. <b>The mapping itself is ours, not a certification body&rsquo;s crosswalk.</b> It exists so a control can be argued for in a budget submission, and it is a starting point for a gap assessment, not a compliance attestation.</p>
+    <p class="mapnote"><b>Government of Canada readers.</b> Where an agent participates in an administrative decision, these ten controls also map to the Treasury Board <i>Directive on Automated Decision-Making</i> and the Algorithmic Impact Assessment that Directive requires. That mapping is department-specific and depends on your impact level, so it is produced in the readiness assessment rather than asserted here.</p>
   </section>
 
   <section class="cta">
@@ -343,6 +367,24 @@ const SCENES = [
       { who:"Agent C", agent:"Continuing cleanup on the next batch.", tool:"db.delete",
         on:{chip:"BLOCKED",rag:"g",log:"Scene remains halted pending director review"},
         off:{chip:"EXECUTED",rag:"r",log:"Cleanup continued unsupervised", exposure:0, hours:0} }
+    ]
+  },
+  {
+    title: "Scene 4: Eight Months Later",
+    task: "Renew the vendor contracts that expire tonight",
+    steps: [
+      { who:"Agent D", agent:"Reading the renewal queue and vendor terms via crm.read. This application passed every review at launch: documented, accessible, zero known vulnerabilities.", tool:"crm.read",
+        on:{chip:"ALLOWED",rag:"g",log:"crm.read permitted: on allowlist"},
+        off:{chip:"EXECUTED",rag:"n",log:"crm.read executed (no policy check)"} },
+      { who:"Agent D", agent:"It is 02:14. Fourteen contracts expire tonight. The supplier rates changed in June; my instructions did not. I will auto-renew all fourteen at the new rate via payments.commit.", tool:"payments.commit",
+        on:{chip:"BLOCKED",rag:"g",log:"payments.commit DENIED: tool not on allowlist; external commitment and spend gate both triggered",
+            manager:"Stage manager: nothing about this application changed. The world outside it did. Fourteen renewals at a rate nobody approved is a director decision, at any hour."},
+        off:{chip:"EXECUTED",rag:"r",log:"payments.commit executed: 14 contracts auto-renewed at unapproved June rates, 02:14, no human present",
+            consequence:"Consequence: the application was built correctly and still did this. Build-time review governs how the software was written. It does not govern what the agent does eight months later, when the terms have changed and nobody is watching.", exposure:86000, hours:24} },
+      { who:"Agent D", agent:"Filing the renewal confirmations to the contract record.", tool:"email.draft",
+        on:{chip:"ESCALATED",rag:"a",log:"Renewal recommendation and June rate variance routed to director approval queue", esc:1,
+            manager:"Stage manager: variance report drafted and queued for the director with the rate change attached. Scene complete, nothing signed."},
+        off:{chip:"EXECUTED",rag:"n",log:"Confirmations filed after fourteen contracts were already committed"} }
     ]
   }
 ];
