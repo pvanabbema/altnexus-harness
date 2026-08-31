@@ -395,9 +395,10 @@ toggle.addEventListener("click", ()=>{
   toggle.setAttribute("aria-checked", harnessOn);
   stateWord.textContent = harnessOn ? "ON" : "OFF";
   stateWord.className = "state-word " + (harnessOn ? "on" : "off");
+  resetRun();
   $("hint").innerHTML = harnessOn
-    ? "Harness <b>ON</b>. Re-run the same scene. The agents behave identically; the stage manager does not."
-    : "Harness <b>OFF</b>. Agents will improvise with no policy layer between intent and execution.";
+    ? "Harness <b>ON</b>, and the booth is cleared so this run is judged on its own. Re-run the same scene. The agents behave identically; the stage manager does not."
+    : "Harness <b>OFF</b>, booth cleared. Agents will improvise with no policy layer between intent and execution.";
 });
 
 /* Log */
@@ -420,8 +421,15 @@ function say(cls, who, text){
 }
 
 function refreshBooth(){
-  $("mExposure").textContent = fmt(totals.exposure);
-  $("mHours").textContent = totals.hours + " h";
+  /* A prevented loss must not be painted in the loss colour. Red is what the harness
+     is there to stop; showing $0 in red told the buyer the win was a failure.
+     Added 2026-08-31 with the toggle reset below. */
+  var _ex = $("mExposure"), _hr = $("mHours");
+  var _clean = (totals.exposure === 0 && totals.hours === 0);
+  _ex.textContent = fmt(totals.exposure);
+  _hr.textContent = totals.hours + " h";
+  _ex.className = "mval " + (_clean ? "safe" : "cost");
+  _hr.className = "mval " + (_clean ? "safe" : "cost");
   $("mBlocked").textContent = totals.blocked;
   $("mEsc").textContent = totals.esc;
 }
@@ -472,12 +480,25 @@ document.querySelectorAll("[data-scene]").forEach(b=>{
   b.addEventListener("click", ()=>runScene(parseInt(b.dataset.scene)));
 });
 
-$("resetBtn").addEventListener("click", ()=>{
-  if(running) return;
+/* One reset body, called from the Reset button AND from the harness toggle.
+
+   WHY THE TOGGLE RESETS. The instructions on this page say: run Scene 1 with the harness
+   OFF, then flip it ON and run the same scene. Before 2026-08-31 the booth totals were
+   cumulative and survived the flip, so following those instructions exactly produced a
+   harness-ON run still reading $12,400 in red after the stage manager had blocked the
+   refund. The page's own instructions disproved the page's own argument, and the buyer
+   had no way to know a hidden Reset was required. The trap was in the code, not the
+   wording, so the fix is here and not in the instructions. */
+function resetRun(){
   totals = {exposure:0,hours:0,blocked:0,esc:0,logged:0};
   refreshBooth(); $("mLogged").textContent = 0;
   dailies.innerHTML = ""; stage.innerHTML = '<div class="empty-stage">Stage dark. Awaiting scene call.</div>';
   renderCallsheet(-1); $("stageStatus").textContent = "dark";
+}
+
+$("resetBtn").addEventListener("click", ()=>{
+  if(running) return;
+  resetRun();
 });
 
 /* PWA service worker (progressive enhancement; requires sw.js at site root) */
